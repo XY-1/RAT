@@ -651,8 +651,12 @@ class EncoderDecoder(nn.Module):
         out3 = out + out2
         out3[out3<0]=0
         out4=out3.sum(dim=2)
-        out5=out3/out4
-        return out5                             #[128,1,12]
+        out5=out4
+        for rfn in range(self.coin_num):
+            out5=torch.cat((out5,out4),1)
+        out5=out5.unsqueeze(1)
+        out6=out3/out5
+        return out6 #[128,1,12] #正のみ
 
 def clones(module, N):
     "Produce N identical layers."
