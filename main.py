@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 import numpy as np
 import torch
@@ -10,13 +11,13 @@ from torch.autograd import Variable
 #seaborn.set_context(context="talk")
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import pandas as pd
 
 
 
 #DATABASE_DIR="/data2/kaylakxu/PGPortfolio-master/PGPortfolio-master/database/Data.db"
-DATABASE_DIR = './database/Data.db'
+DATABASE_DIR = '../drive/MyDrive/Data.db'
 # About time
 NOW = 0
 FIVE_MINUTES = 60 * 5
