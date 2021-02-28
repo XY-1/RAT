@@ -1088,7 +1088,7 @@ class Test_Loss(nn.Module):
 
     def forward(self, w, y):               # w:[128,10,1,12] y(128,10,11,4)
         close_price = y[:,:,:,0:1].cuda()    #   [128,10,11,1]
-        close_price = torch.cat([torch.ones(close_price.size()[0],close_price.size()[1],1,1).cuda(),close_price],2).cuda()       #[128,10,11,1]cat[128,10,1,1]->[128,10,12,1]
+        close_price = torch.cat([0.995*torch.ones(close_price.size()[0],close_price.size()[1],1,1).cuda(),close_price],2).cuda()       #[128,10,11,1]cat[128,10,1,1]->[128,10,12,1]
         reward = torch.matmul(w,close_price)   #  [128,10,1,12] * [128,10,12,1] ->[128,10,1,1]
         close_price = close_price.view(close_price.size()[0],close_price.size()[1],close_price.size()[3],close_price.size()[2])  #[128,10,12,1] -> [128,10,1,12]
 ##############################################################################
