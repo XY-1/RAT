@@ -648,10 +648,11 @@ class EncoderDecoder(nn.Module):
 
         out = out*2
         out2 = -out2
-        return out+out2                             #[128,1,12]
-
-
-
+        out3 = out + out2
+        out3[out3<0]=0
+        out4=out3.sum(dim=2)
+        out5=out3/out4
+        return out5                             #[128,1,12]
 
 def clones(module, N):
     "Produce N identical layers."
