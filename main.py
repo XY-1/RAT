@@ -13,7 +13,7 @@ from torch.autograd import Variable
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import pandas as pd
-
+torch.cuda.empty_cache() #OOM対策
 
 
 #DATABASE_DIR="/data2/kaylakxu/PGPortfolio-master/PGPortfolio-master/database/Data.db"
@@ -703,7 +703,7 @@ class SublayerConnection(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, x, sublayer):
-        "Apply residual connection to any sublayer with the same size."
+        "Apply residual connection to any sublayer with tthe same size."
         return x + self.dropout(sublayer(self.norm(x)))
 
 class EncoderLayer(nn.Module):
@@ -1008,7 +1008,7 @@ class Batch_Loss(nn.Module):
     def forward(self, w, y):            # w:[128,1,12]   y:[128,11,4] 
         close_price=y[:,:,0:1].cuda()   #   [128,11,1]
         #future close prise (including cash)
-        close_price=torch.cat([torch.ones(close_price.size()[0],1,1).cuda(),close_price],1).cuda()         #[128,11,1]cat[128,1,1]->[128,12,1]
+        close_price=torch.cat([0.998*torch.ones(close_price.size()[0],1,1).cuda(),close_price],1).cuda()         #[128,11,1]cat[128,1,1]->[128,12,1] # 現金留まり対策
         reward=torch.matmul(w,close_price)                                                                 #[128,1,1]
         close_price=close_price.view(close_price.size()[0],close_price.size()[2],close_price.size()[1])    #[128,1,12] 
 ###############################################################################################################
@@ -1088,7 +1088,7 @@ class Test_Loss(nn.Module):
 
     def forward(self, w, y):               # w:[128,10,1,12] y(128,10,11,4)
         close_price = y[:,:,:,0:1].cuda()    #   [128,10,11,1]
-        close_price = torch.cat([0.995*torch.ones(close_price.size()[0],close_price.size()[1],1,1).cuda(),close_price],2).cuda()       #[128,10,11,1]cat[128,10,1,1]->[128,10,12,1]
+        close_price = torch.cat([0.998*torch.ones(close_price.size()[0],close_price.size()[1],1,1).cuda(),close_price],2).cuda()       #[128,10,11,1]cat[128,10,1,1]->[128,10,12,1]
         reward = torch.matmul(w,close_price)   #  [128,10,1,12] * [128,10,12,1] ->[128,10,1,1]
         close_price = close_price.view(close_price.size()[0],close_price.size()[1],close_price.size()[3],close_price.size()[2])  #[128,10,12,1] -> [128,10,1,12]
 ##############################################################################
