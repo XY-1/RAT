@@ -146,7 +146,7 @@ class HistoryManager:
                 for feature in features:
                     # NOTE: transform the start date to end date
                     if feature == "close":
-                        sql = ("SELECT date+300 AS date_norm, close FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, close FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
@@ -177,37 +177,37 @@ class HistoryManager:
                                 " GROUP BY date_norm".format(
                                     period=period,start=start,end=end,coin=coin))
                     elif feature == "sma7":
-                        sql = ("SELECT date+300 AS date_norm, sma7 FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, sma7 FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "sma25":
-                        sql = ("SELECT date+300 AS date_norm, sma25 FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, sma25 FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "psar":
-                        sql = ("SELECT date+300 AS date_norm, psar FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, psar FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "macd":
-                        sql = ("SELECT date+300 AS date_norm, macd FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, macd FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "rsi":
-                        sql = ("SELECT date+300 AS date_norm, rsi FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, rsi FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "pamr1":
-                        sql = ("SELECT date+300 AS date_norm, pamr1 FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, pamr1 FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
                     elif feature == "pamr2":
-                        sql = ("SELECT date+300 AS date_norm, pamr2 FROM History WHERE"
+                        sql = ("SELECT date+{period} AS date_norm, pamr2 FROM History WHERE"
                                " date_norm>={start} and date_norm<={end}" 
                                " and date_norm%{period}=0 and coin=\"{coin}\"".format(
                                start=start, end=end, period=period, coin=coin))
