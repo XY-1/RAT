@@ -31,7 +31,7 @@ for MULTIHEAD_NUM in 2;
 do
 for LOCAL_CONTEXT_LENGTH in 5;
 do
-for MODEL_DIM in 12;
+for MODEL_DIM in 6;
 do
 for WEIGHT_DECAY in 5e-8;
 do
@@ -56,10 +56,10 @@ python main.py \
 --total_step 50000 \
 --x_window_size ${X_WINDOW_SIZE} \
 --batch_size ${BATCH_SIZE} \
---coin_num 36 \
---feature_number 11 \
+--coin_num 9 \
+--feature_number 4 \
 --output_step 1000 \
---test_portion 0.08 \
+--test_portion 0.42 \
 --trading_consumption 0.0025 \
 --variance_penalty 0.0 \
 --cost_penalty 0.0 \
