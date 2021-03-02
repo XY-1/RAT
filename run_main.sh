@@ -64,8 +64,8 @@ python main.py \
 --variance_penalty 0.0 \
 --cost_penalty 0.0 \
 --learning_rate 0.0001 \
---start 2020/02/01 \
---end 2020/02/15 \
+--start 2018/05/15 \
+--end 2021/02/27 \
 --model_dir ${SAVE_MODEL_DIR} \
 --model_name ${MODEL_NAME} \
 --model_index ${MODEL_INDEX} \
