@@ -17,7 +17,7 @@ torch.cuda.empty_cache() #OOM対策
 
 
 #DATABASE_DIR="/data2/kaylakxu/PGPortfolio-master/PGPortfolio-master/database/Data.db"
-DATABASE_DIR = '../drive/MyDrive/Data.db'
+DATABASE_DIR = '../drive/MyDrive/Data17.db'
 # About time
 NOW = 0
 FIVE_MINUTES = 60 * 5
@@ -169,6 +169,41 @@ class HistoryManager:
                                 " WHERE date_norm>={start} and date_norm<={end} and coin=\"{coin}\""
                                 " GROUP BY date_norm".format(
                                     period=period,start=start,end=end,coin=coin))
+                    elif feature == "sma7":
+                        sql = ("SELECT date+300 AS date_norm, sma7 FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "sma25":
+                        sql = ("SELECT date+300 AS date_norm, sma25 FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "psar":
+                        sql = ("SELECT date+300 AS date_norm, psar FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "macd":
+                        sql = ("SELECT date+300 AS date_norm, macd FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "rsi":
+                        sql = ("SELECT date+300 AS date_norm, rsi FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "pamr1":
+                        sql = ("SELECT date+300 AS date_norm, pamr1 FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
+                    elif feature == "pamr2":
+                        sql = ("SELECT date+300 AS date_norm, pamr2 FROM History WHERE"
+                               " date_norm>={start} and date_norm<={end}" 
+                               " and date_norm%{period}=0 and coin=\"{coin}\"".format(
+                               start=start, end=end, period=period, coin=coin))
                     else:
                         msg = ("The feature %s is not supported" % feature)
                         print(msg)
@@ -300,6 +335,8 @@ def get_type_list(feature_number):
         type_list = ["close", "high", "low"]
     elif feature_number == 4:
         type_list = ["close", "high", "low", "open"]
+    elif feature_number == 11:
+        type_list = ["close", "high", "low", "open", "sma7", "sma25", "psar", "macd", "rsi", "pamr1", "pamr2"]
     else:
         raise ValueError("feature number could not be %s" % feature_number)
     return type_list
