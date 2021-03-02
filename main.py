@@ -98,15 +98,8 @@ class HistoryManager:
             cursor.execute('CREATE TABLE IF NOT EXISTS History (date INTEGER,'
                            ' coin varchar(20), high FLOAT, low FLOAT,'
                            ' open FLOAT, close FLOAT, volume FLOAT, '
-                           ' quoteVolume FLOAT, weightedAverage FLOAT,' 
-                           ' sma7 FLOAT, sma25 FLOAT, psar FLOAT, '
-                           ' macd FLOAT, rsi FLOAT,'
-                           ' pamr1 FLOAT, pamr2 FLOAT, PRIMARY KEY (date, coin));')    
-            #cursor.execute('CREATE TABLE IF NOT EXISTS History (date INTEGER,'
-            #               ' coin varchar(20), high FLOAT, low FLOAT,'
-            #               ' open FLOAT, close FLOAT, volume FLOAT, '
-            #               ' quoteVolume FLOAT, weightedAverage FLOAT,'
-            #               'PRIMARY KEY (date, coin));')
+                           ' quoteVolume FLOAT, weightedAverage FLOAT,'
+                           'PRIMARY KEY (date, coin));')
             connection.commit()
 
     def get_global_data_matrix(self, start, end, period=300, features=('close',)):
@@ -139,7 +132,7 @@ class HistoryManager:
 
         time_index = pd.to_datetime(list(range(start, end+1, period)),unit='s')
         panel = pd.Panel(items=features, major_axis=coins, minor_axis=time_index, dtype=np.float32)
-
+        #type_list = ["close", "high", "low", "open", "sma7", "sma25", "psar", "macd", "rsi", "pamr1", "pamr2"]
         connection = sqlite3.connect(DATABASE_DIR)
         try:
             for row_number, coin in enumerate(coins):
@@ -342,6 +335,8 @@ def get_type_list(feature_number):
         type_list = ["close", "high", "low"]
     elif feature_number == 4:
         type_list = ["close", "high", "low", "open"]
+    elif feature_number == 5:
+        type_list = ["close", "psar", "macd",  "pamr1", "pamr2"]
     elif feature_number == 11:
         type_list = ["close", "high", "low", "open", "sma7", "sma25", "psar", "macd", "rsi", "pamr1", "pamr2"]
     else:
@@ -1287,7 +1282,38 @@ def test_online(DM,x_window_size,model,evaluate_loss_compute,local_context_lengt
         out=out[:,:,1:]  #去掉cash #[109,1,11]
         tst_previous_w=out
     tst_long_term_w=tst_long_term_w.permute(1,0,2,3) ##[10,128,1,12]->#[128,10,1,12]
-    tst_loss, tst_portfolio_value, SR, CR, St_v,tst_pc_array,TO=evaluate_loss_compute(tst_long_term_w,tst_trg_y)  
+    tst_loss, tst_portfolio_value, SR, CR, St_v,tst_pc_array,TO=evaluate_loss_compute(tst_long_term_w,tst_trg_y)
+    print("here", tst_long_term_w.size()) 
+    print("here", tst_trg_y.size()) 
+    print("here", tst_batch_input.shape) 
+    print("here", tst_batch_y.shape) 
+    with open('../test_out.txt', 'a') as f_handle:
+        np.savetxt(f_handle, torch.squeeze(tst_long_term_w.cpu()).numpy())
+    with open('../test_target_y.txt', 'a') as f_handle1:
+        np.savetxt(f_handle1, torch.squeeze(tst_trg_y.cpu()[:,:,:,0:1]).numpy())
+    with open('../test_x.txt', 'a') as f_handle2:
+        np.savetxt(f_handle2, np.squeeze(tst_batch_input[0:1,:,:,:]))
+    with open('../test_y.txt', 'a') as f_handle3:
+        np.savetxt(f_handle3, np.squeeze(tst_batch_y[:,:,:,0:1]))
+    with open('../test_target_y1.txt', 'a') as f_handle1:
+        np.savetxt(f_handle1, torch.squeeze(tst_trg_y.cpu()[:,:,:,1:2]).numpy())
+    with open('../test_x1.txt', 'a') as f_handle2:
+        np.savetxt(f_handle2, np.squeeze(tst_batch_input[1:2,:,:,:]))
+    with open('../test_y1.txt', 'a') as f_handle3:
+        np.savetxt(f_handle3, np.squeeze(tst_batch_y[:,:,:,1:2]))
+    with open('../test_target_y2.txt', 'a') as f_handle1:
+        np.savetxt(f_handle1, torch.squeeze(tst_trg_y.cpu()[:,:,:,2:3]).numpy())
+    with open('../test_x2.txt', 'a') as f_handle2:
+        np.savetxt(f_handle2, np.squeeze(tst_batch_input[2:3,:,:,:]))
+    with open('../test_y2.txt', 'a') as f_handle3:
+        np.savetxt(f_handle3, np.squeeze(tst_batch_y[:,:,:,2:3]))
+    with open('../test_target_y3.txt', 'a') as f_handle1:
+        np.savetxt(f_handle1, torch.squeeze(tst_trg_y.cpu()[:,:,:,3:4]).numpy())
+    with open('../test_x3.txt', 'a') as f_handle2:
+        np.savetxt(f_handle2, np.squeeze(tst_batch_input[3:4,:,:,:]))
+    with open('../test_y3.txt', 'a') as f_handle3:
+        np.savetxt(f_handle3, np.squeeze(tst_batch_y[:,:,:,3:4]))
+
     return tst_loss, tst_portfolio_value, SR, CR, St_v,tst_pc_array,TO
 
 
@@ -1398,7 +1424,7 @@ def train_net(DM, total_step, output_step, x_window_size, local_context_length, 
                 
                 if(tst_portfolio_value>max_tst_portfolio_value):
                     max_tst_portfolio_value=tst_portfolio_value
-                    torch.save(model, model_dir+'/'+str(model_index)+".pkl")
+                    torch.save(model, model_dir+'/content/drive/MyDrive/'+str(model_index)+".pkl")
 #    torch.save(model, model_dir+'/'+str(model_index)+".pkl")
                     print("save model!")
     return tst_loss, tst_portfolio_value
@@ -1490,9 +1516,9 @@ test_loss_compute = SimpleLossCompute_tst( Test_Loss(trading_consumption,interes
 
 
 ##########################train net####################################################
-tst_loss, tst_portfolio_value = train_net(DM, total_step, output_step, x_window_size, local_context_length ,model, FLAGS.model_dir, FLAGS.model_index, loss_compute, evaluate_loss_compute, True, True)
+#tst_loss, tst_portfolio_value = train_net(DM, total_step, output_step, x_window_size, local_context_length ,model, FLAGS.model_dir, FLAGS.model_index, loss_compute, evaluate_loss_compute, True, True)
 
-model=torch.load(FLAGS.model_dir+'/'+ str(FLAGS.model_index)+'.pkl')
+model=torch.load('/content/drive/MyDrive/sugoi.pkl')
 
 ##########################test net#####################################################
 tst_portfolio_value, SR, CR, St_v,tst_pc_array,TO=test_net(DM, 1, 1, x_window_size, local_context_length ,model, loss_compute, test_loss_compute, False, True)
