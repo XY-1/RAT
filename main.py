@@ -98,8 +98,15 @@ class HistoryManager:
             cursor.execute('CREATE TABLE IF NOT EXISTS History (date INTEGER,'
                            ' coin varchar(20), high FLOAT, low FLOAT,'
                            ' open FLOAT, close FLOAT, volume FLOAT, '
-                           ' quoteVolume FLOAT, weightedAverage FLOAT,'
-                           'PRIMARY KEY (date, coin));')
+                           ' quoteVolume FLOAT, weightedAverage FLOAT,' 
+                           ' sma7 FLOAT, sma25 FLOAT, psar FLOAT, '
+                           ' macd FLOAT, rsi FLOAT,'
+                           ' pamr1 FLOAT, pamr2 FLOAT, PRIMARY KEY (date, coin));')    
+            #cursor.execute('CREATE TABLE IF NOT EXISTS History (date INTEGER,'
+            #               ' coin varchar(20), high FLOAT, low FLOAT,'
+            #               ' open FLOAT, close FLOAT, volume FLOAT, '
+            #               ' quoteVolume FLOAT, weightedAverage FLOAT,'
+            #               'PRIMARY KEY (date, coin));')
             connection.commit()
 
     def get_global_data_matrix(self, start, end, period=300, features=('close',)):
