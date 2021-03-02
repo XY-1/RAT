@@ -56,7 +56,7 @@ python main.py \
 --total_step 50000 \
 --x_window_size ${X_WINDOW_SIZE} \
 --batch_size ${BATCH_SIZE} \
---coin_num 11 \
+--coin_num 36 \
 --feature_number 4 \
 --output_step 1000 \
 --test_portion 0.08 \
