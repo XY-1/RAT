@@ -25,7 +25,7 @@ for MODEL_INDEX in 1 2 3 4 5;
 do
 for X_WINDOW_SIZE in 31;
 do
-for BATCH_SIZE in 128;
+for BATCH_SIZE in 32;
 do
 for MULTIHEAD_NUM in 2;
 do
@@ -57,7 +57,7 @@ python main.py \
 --x_window_size ${X_WINDOW_SIZE} \
 --batch_size ${BATCH_SIZE} \
 --coin_num 36 \
---feature_number 4 \
+--feature_number 11 \
 --output_step 1000 \
 --test_portion 0.08 \
 --trading_consumption 0.0025 \
